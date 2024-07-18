@@ -50,14 +50,14 @@ def r(val):
 class GenPlate:
 
 
-    def __init__(self,fontCh,fontEng):
+    def __init__(self):
 
         #self.fontC =  ImageFont.truetype(fontCh,43,0);
-        self.fontC =  ImageFont.truetype("/home/yeleussinova/data_SSD/license_plate_generation/font/platechar.ttf",40,0)
-        self.fontE =  ImageFont.truetype("/home/yeleussinova/data_SSD/license_plate_generation/font/platechar.ttf",40,0)
-        self.img=np.array(Image.new("RGB", (226,70),(255,255,255)))
+        # self.fontC =  ImageFont.truetype("/home/yeleussinova/data_SSD/license_plate_generation/font/platechar.ttf",40,0)
+        # self.fontE =  ImageFont.truetype("/home/yeleussinova/data_SSD/license_plate_generation/font/platechar.ttf",40,0)
+        self.img = np.array(Image.new("RGB", (226,70),(255,255,255)))
         # self.bg  = cv2.resize(cv2.imread("/home/yeleussinova/data_SSD/generate_LP/images/template.bmp"),(226,70))
-        self.smu = cv2.imread("/home/yeleussinova/data_SSD/license_plate_generation/templates/smu2.jpg")
+        # self.smu = cv2.imread("/home/yeleussinova/data_SSD/license_plate_generation/templates/smu2.jpg")
 
 
     def draw(self,val):
@@ -106,13 +106,13 @@ class GenPlate:
             filename = os.path.join(outputPath + "/" +  plateStr + ".jpg")
             cv2.imwrite(filename, img);
 
-    def text_generator(self, size):
+    def text_generator(self, size=1):
         chars = string.ascii_uppercase
         # mong_chars = 'АБВГДЕЗИКЛМНОӨПРСТУҮХЦЧЭЯ'
         # chars= mong_chars.lower()
         return ''.join(random.choice(chars) for _ in range(size))
 
-    def digit_generator(self, size):
+    def digit_generator(self, size=0):
         chars = string.digits
         return ''.join(random.choice(chars) for _ in range(size))
 
@@ -150,10 +150,35 @@ class GenPlate:
             #     plateStr = G.genPlateString(-1, -1)
             # elif gen > 75:
             # plateStr = G.text_generator(2)
-            plateDigit = G.digit_generator(5)
-            # plateStr = G.text_generator(1)
+            plateDigit = G.digit_generator(size=4)
+            plateStr = G.text_generator(size=1)
             # else:
             #     plateStr = G.text_generator(6)
+
+
+            if state == 'oman_red_1':
+                imgNew = Image.open("../templates/oman_red_1.jpg")
+                imgNew = imgNew.resize((200, 60))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 52
+                font = ImageFont.truetype("../font/DINEngschriftStd.otf", fontsize)
+                draw.text((7, 12), plateDigit, font=font, fill=(216, 204, 208, 255))
+                fontsize = 28
+                font = ImageFont.truetype("../font/DINEngschriftStd.otf", fontsize)
+                draw.text((97, 34), plateStr[0] + "  " + plateStr[1], font=font, fill=(216, 204, 208, 255))
+                outLabel = plateDigit + plateStr.replace(" ", "").lower() + ',oman'
+
+            if state == 'oman_red_2':
+                imgNew = Image.open("../templates/oman_red_2.jpg")
+                imgNew = imgNew.resize((148, 44))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 39
+                font = ImageFont.truetype("../font/DINEngschriftStd.otf", fontsize)
+                draw.text((2, 8), plateDigit, font=font, fill=(180, 160, 160, 255))
+                fontsize = 20
+                font = ImageFont.truetype("../font/DINEngschriftStd.otf", fontsize)
+                draw.text((77, 28), plateStr, font=font, fill=(180, 160, 160, 255))
+                outLabel = plateDigit + plateStr.replace(" ", "").lower() + ',oman'
 
             if state == 'uae_aa':
                 imgNew = Image.open("../templates/uae_aa.png")
@@ -190,7 +215,6 @@ class GenPlate:
                 img.paste(img2, (5,10,80,55), img2)
                 imgNew = img
 
-
             if state == 'oman':
                 img = Image.open("../templates/oman.png")
                 img = img.resize((90, 50))
@@ -201,6 +225,7 @@ class GenPlate:
                 imgNew = Image.open("../templates/oman1.png")
                 img = img.resize((50, 35))
                 imgNew.paste(img, (5,3,55,38), img)
+
 
             if state == 'bahrein':
                 imgNew = Image.open("../templates/bahrein_1.png")
@@ -1184,15 +1209,16 @@ class GenPlate:
 
 
 if __name__ == '__main__':
-    G = GenPlate("../font/platech.ttf", '../font/platechar.ttf')
+    # G = GenPlate("../font/platech.ttf", '../font/platechar.ttf')
+    G = GenPlate()
 
     # G.genBatch(10,2,range(31,65),"/home/yeleussinova/data_SSD/generate_LP/GeneratedPlateSamples",(272,72))
 
-    state = 'uae_aa'
+    state = 'oman_red_2'
 
-    ann_out_path = "/home/yeleussinova/data_1TB/uae/generated_dubai"
-    synth_out_path = "/home/yeleussinova/data_1TB/uae/generated_dubai"
-    G.generate_img(count=2000, start_id=1, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
+    ann_out_path = "/home/arman/data_1TB/uae/oman/oman_red_2"
+    synth_out_path = "/home/arman/data_1TB/uae/oman/oman_red_2"
+    G.generate_img(count=10, start_id=1, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
 
     # image_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/images/" + state
     # label_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/labels"
