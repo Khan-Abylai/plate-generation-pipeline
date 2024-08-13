@@ -78,6 +78,13 @@ class GenPlate:
 
             return com
 
+    def hconcat_resize_min(self, im_list, interpolation=cv2.INTER_CUBIC):
+        h_min = min(im.shape[0] for im in im_list)
+        im_list_resize = [cv2.resize(im, (int(im.shape[1] * h_min / im.shape[0]), h_min), interpolation=interpolation)
+                          for
+                          im in im_list]
+        return cv2.hconcat(im_list_resize)
+
     def genPlateString(self,pos,val):
         plateStr = "";
         box = [0, 0, 0, 0, 0];
@@ -143,6 +150,7 @@ class GenPlate:
         if not os.path.exists(annot_out_path):
             os.mkdir(annot_out_path)
 
+
         for i in range(count):
 
             # gen = random.randint(0, 100)
@@ -150,11 +158,97 @@ class GenPlate:
             #     plateStr = G.genPlateString(-1, -1)
             # elif gen > 75:
             # plateStr = G.text_generator(2)
-            plateDigit = G.digit_generator(size=4)
-            plateStr = G.text_generator(size=1)
+            plateDigit = G.digit_generator(size=2)
+            plateDigit2 = G.digit_generator(size=5)
+            plateStr = G.text_generator(size=2)
             # else:
             #     plateStr = G.text_generator(6)
 
+            if state == 'marocco_squared':
+                s = 'هـ'
+                l = {
+                        'أ': 'a', 'ب' : 'b', 'د':'d', 'هـ':'h', 'و':'e', 'ط':'t'
+                     }
+                imgNew = Image.open("../templates/marocco_squar.jpg")
+                imgNew = imgNew.resize((158, 118))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 55
+                font1 = ImageFont.truetype("../font/KFGQPC Uthmanic Script HAFS Regular.otf", fontsize)
+                font2 = ImageFont.truetype("../font/dealerplate_california.ttf", 55)
+                draw.text((20, -20), s, font=font1, fill=(50, 50, 50, 45))
+                draw.text((90, 8), plateDigit, font=font2, fill=(50, 50, 50, 45))
+                draw.text((23, 68), plateDigit2, font=font2, fill=(50, 50, 50, 45))
+
+                outLabel = l[s] + plateDigit + plateDigit2
+
+
+
+            if state == 'marocco_1':
+                marokko_letters = ['a', 'b', 'd', 'h', 'e', 't']
+                imgNew = Image.open("../templates/marocco_1.jpg")
+                imgNew = imgNew.resize((200, 60))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 48
+                font1 = ImageFont.truetype("../font/dealerplate_california.ttf", fontsize)
+                font2 = ImageFont.truetype("../font/DealerplateW00Michigan.ttf", fontsize)
+                draw.text((6, -2), plateDigit, font=font2, fill=(50, 50, 50, 45))
+                draw.text((165, -2), plateStr, font=font2, fill=(50, 50, 50, 45))
+                outLabel = plateDigit + 'e' + plateStr
+
+            if state == 'marocco_2':
+                imgNew = Image.open("../templates/marocco_2.jpg")
+                imgNew = imgNew.resize((200, 60))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 48
+                font1 = ImageFont.truetype("../font/dealerplate_california.ttf", fontsize)
+                font2 = ImageFont.truetype("../font/DealerplateW00Michigan.ttf", fontsize)
+                draw.text((12, -2), plateDigit, font=font2, fill=(40, 40, 50, 45))
+                draw.text((167, -2), plateStr, font=font2, fill=(40, 40, 50, 45))
+                outLabel = plateDigit + 'h' + plateStr
+
+            if state == 'marocco_3':
+                imgNew = Image.open("../templates/marocco_3.jpg")
+                imgNew = imgNew.resize((200, 60))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 48
+                font1 = ImageFont.truetype("../font/dealerplate_california.ttf", fontsize)
+                font2 = ImageFont.truetype("../font/DealerplateW00Michigan.ttf", fontsize)
+                draw.text((12, -2), plateDigit, font=font2, fill=(40, 40, 50, 45))
+                draw.text((167, -2), plateStr, font=font2, fill=(40, 40, 50, 45))
+                outLabel = plateDigit + 'b' + plateStr
+
+            if state == 'marocco_4':
+                imgNew = Image.open("../templates/marocco_4.jpg")
+                imgNew = imgNew.resize((200, 60))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 45
+                font1 = ImageFont.truetype("../font/dealerplate_california.ttf", fontsize)
+                font2 = ImageFont.truetype("../font/DealerplateW00Michigan.ttf", fontsize)
+                draw.text((7, 13), plateDigit, font=font1, fill=(40, 40, 50, 45))
+                draw.text((167, 13), plateStr, font=font1, fill=(40, 40, 50, 45))
+                outLabel = plateDigit + 'd' + plateStr
+
+            if state == 'marocco_5':
+                imgNew = Image.open("../templates/marocco_5.jpg")
+                imgNew = imgNew.resize((220, 62))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 48
+                font1 = ImageFont.truetype("../font/dealerplate_california.ttf", fontsize)
+                font2 = ImageFont.truetype("../font/DealerplateW00Michigan.ttf", fontsize)
+                draw.text((7, 13), plateDigit, font=font1, fill=(40, 40, 50, 45))
+                draw.text((180, 13), plateStr, font=font1, fill=(40, 40, 50, 45))
+                outLabel = plateDigit + 't' + plateStr
+
+            if state == 'marocco_6':
+                imgNew = Image.open("../templates/marocco_6.jpg")
+                imgNew = imgNew.resize((200, 60))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 46
+                font1 = ImageFont.truetype("../font/dealerplate_california.ttf", fontsize)
+                font2 = ImageFont.truetype("../font/DealerplateW00Michigan.ttf", fontsize)
+                draw.text((7, 12), plateDigit, font=font1, fill=(40, 40, 50, 45))
+                draw.text((153, 12), plateStr, font=font1, fill=(40, 40, 50, 45))
+                outLabel = plateDigit + 'a' + plateStr
 
             if state == 'oman_red_1':
                 imgNew = Image.open("../templates/oman_red_1.jpg")
@@ -728,13 +822,16 @@ class GenPlate:
             filename = os.path.join(outputPath, img_name)
             generated = np.array(imgNew)
             generated = cv2.cvtColor(generated, cv2.COLOR_BGR2RGB)
+            half = generated.shape[0] // 2
+            top = generated[:half, :]
+            bottom = generated[half:, :]
+            generated = self.hconcat_resize_min([top, bottom])
             cv2.imwrite(filename, generated)
             # with open(os.path.join(annot_out_path, txt_name_fake), 'w') as f:
             #     f.writelines(plateStr)
             print(i, filename)
             with open(os.path.join(annot_out_path, img_name.replace('.jpg', '.txt')), 'w') as f:
                 f.writelines(outLabel)
-
 
 
 
@@ -1205,7 +1302,7 @@ class GenPlate:
                     else:
                         char_img = Image.open("/home/yeleussinova/data_SSD/mongolia/mn/font/black/letter/" + char + ".png")
                         char_img = char_img.resize((16, 22))
-                        imgNew.paste(char_img, (id * 15 -40, 33), char_img)
+                        imgNew.paste(char_img, (id * 15 - 40, 33), char_img)
 
 
 if __name__ == '__main__':
@@ -1214,11 +1311,11 @@ if __name__ == '__main__':
 
     # G.genBatch(10,2,range(31,65),"/home/yeleussinova/data_SSD/generate_LP/GeneratedPlateSamples",(272,72))
 
-    state = 'oman_red_2'
+    state = 'marocco_squared'
 
-    ann_out_path = "/home/arman/data_1TB/uae/oman/oman_red_2"
-    synth_out_path = "/home/arman/data_1TB/uae/oman/oman_red_2"
-    G.generate_img(count=10, start_id=1, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
+    ann_out_path = "/home/arman/data_1TB/marocco/generated/squared/6"
+    synth_out_path = "/home/arman/data_1TB/marocco/generated/squared/6"
+    G.generate_img(count=1000, start_id=501, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
 
     # image_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/images/" + state
     # label_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/labels"
