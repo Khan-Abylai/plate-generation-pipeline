@@ -143,14 +143,12 @@ class GenPlate:
         else:
             print("label's file not found")
 
-    def generate_img(self, count, start_id, outputPath, annot_out_path, state):
+    def generate_img(self, count, start_id, outputPath, annot_out_path, state, square=False):
 
         if not os.path.exists(outputPath):
             os.mkdir(outputPath)
         if not os.path.exists(annot_out_path):
             os.mkdir(annot_out_path)
-
-
         for i in range(count):
 
             # gen = random.randint(0, 100)
@@ -158,11 +156,19 @@ class GenPlate:
             #     plateStr = G.genPlateString(-1, -1)
             # elif gen > 75:
             # plateStr = G.text_generator(2)
-            plateDigit = G.digit_generator(size=2)
-            plateDigit2 = G.digit_generator(size=5)
+            plateDigit = G.digit_generator(size=5)
             plateStr = G.text_generator(size=2)
             # else:
             #     plateStr = G.text_generator(6)
+
+            if state == 'uae_bb':
+                imgNew = Image.open("../templates/uae_bb.png")
+                # imgNew = imgNew.resize((128, 70))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 40
+                font = ImageFont.truetype("../font/DealerplateW00Virginia.ttf", fontsize)
+                draw.text((60, 12), '39743', font=font, fill=(0,0,0,0))
+                outLabel = 'bb' + plateDigit + ',dubai'
 
             if state == 'marocco_squared':
                 s = 'هـ'
@@ -822,10 +828,11 @@ class GenPlate:
             filename = os.path.join(outputPath, img_name)
             generated = np.array(imgNew)
             generated = cv2.cvtColor(generated, cv2.COLOR_BGR2RGB)
-            half = generated.shape[0] // 2
-            top = generated[:half, :]
-            bottom = generated[half:, :]
-            generated = self.hconcat_resize_min([top, bottom])
+            if square:
+                half = generated.shape[0] // 2
+                top = generated[:half, :]
+                bottom = generated[half:, :]
+                generated = self.hconcat_resize_min([top, bottom])
             cv2.imwrite(filename, generated)
             # with open(os.path.join(annot_out_path, txt_name_fake), 'w') as f:
             #     f.writelines(plateStr)
@@ -1311,11 +1318,11 @@ if __name__ == '__main__':
 
     # G.genBatch(10,2,range(31,65),"/home/yeleussinova/data_SSD/generate_LP/GeneratedPlateSamples",(272,72))
 
-    state = 'marocco_squared'
+    state = 'uae_bb'
 
-    ann_out_path = "/home/arman/data_1TB/marocco/generated/squared/6"
-    synth_out_path = "/home/arman/data_1TB/marocco/generated/squared/6"
-    G.generate_img(count=1000, start_id=501, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
+    ann_out_path = "/home/arman/data_1TB/uae/generated/uae_bb"
+    synth_out_path = "/home/arman/data_1TB/uae/generated/uae_bb"
+    G.generate_img(count=1, start_id=1, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
 
     # image_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/images/" + state
     # label_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/labels"
