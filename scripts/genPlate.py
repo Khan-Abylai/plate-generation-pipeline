@@ -161,13 +161,22 @@ class GenPlate:
             # else:
             #     plateStr = G.text_generator(6)
 
+            if state == 'uae_20':
+                imgNew = Image.open("../templates/uae_20.png")
+                # imgNew = imgNew.resize((128, 70))
+                draw = ImageDraw.Draw(imgNew)
+                fontsize = 42
+                font = ImageFont.truetype("../font/DealerplateW05Maryland.ttf", fontsize)
+                draw.text((60, -2), plateDigit, font=font, fill=(0,0,0,0))
+                outLabel = 'bb' + plateDigit + ',abu-dhabi'
+
             if state == 'uae_bb':
                 imgNew = Image.open("../templates/uae_bb.png")
                 # imgNew = imgNew.resize((128, 70))
                 draw = ImageDraw.Draw(imgNew)
-                fontsize = 40
-                font = ImageFont.truetype("../font/DealerplateW00Virginia.ttf", fontsize)
-                draw.text((60, 12), '39743', font=font, fill=(0,0,0,0))
+                fontsize = 42
+                font = ImageFont.truetype("../font/DealerplateW05Maryland.ttf", fontsize)
+                draw.text((60, -2), plateDigit, font=font, fill=(0,0,0,0))
                 outLabel = 'bb' + plateDigit + ',dubai'
 
             if state == 'marocco_squared':
@@ -1318,10 +1327,10 @@ if __name__ == '__main__':
 
     # G.genBatch(10,2,range(31,65),"/home/yeleussinova/data_SSD/generate_LP/GeneratedPlateSamples",(272,72))
 
-    state = 'uae_bb'
+    state = 'uae_20'
 
-    ann_out_path = "/home/arman/data_1TB/uae/generated/uae_bb"
-    synth_out_path = "/home/arman/data_1TB/uae/generated/uae_bb"
+    ann_out_path = "/home/arman/data_1TB/uae/generated/uae_20"
+    synth_out_path = "/home/arman/data_1TB/uae/generated/uae_20"
     G.generate_img(count=1, start_id=1, outputPath=synth_out_path, annot_out_path=ann_out_path, state=state)
 
     # image_folder = "/home/yeleussinova/data_SSD/mongolia/plates/squared/images/" + state
